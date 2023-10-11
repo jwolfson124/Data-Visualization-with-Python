@@ -83,21 +83,21 @@ def update_output_container(selected_statistics, input_year):
         # use groupby to create relevant data for plotting
         yearly_rec=recession_data.groupby('Year')['Automobile_Sales'].mean().reset_index()
         R_chart1 = dcc.Graph(
-            figure=px.line(yearly_recession,
+            figure=px.line(yearly_rec,
                 x='Year',
                 y='Automobile_Sales',
                 title="Average Automobile Sales fluctuation over Recession Period"))
 
 #Plot 2 Calculate the average number of vehicles sold by vehicle type       
         # use groupby to create relevant data for plotting
-        average_sales = recession_data.groupby('Vehicle_Type')['Automobile_Sales']mean().reset_index()                           
+        average_sales = recession_data.groupby('Vehicle_Type')['Automobile_Sales'].mean().reset_index()                           
         R_chart2  = dcc.Graph(figure=px.bar(average_sales, x='Vehicle_Type', y='Automobile_Sales')
         
 # Plot 3 Pie chart for total expenditure share by vehicle type during recessions
         # use groupby to create relevant data for plotting
-        exp_rec = recession_data.groupby('Vehicle_Type')['Automobile_Sales']sum().reset_index()
+        exp_rec = recession_data.groupby('Vehicle_Type')['Automobile_Sales'].sum().reset_index()
         R_chart3 = dcc.Graph (
-            figure= px.pie( exp_rec,
+            figure= px.pie(exp_rec,
             values = 'Automobile_Sales',
             names='Vehicle_Type',
             title='Total Sales by Vehicle Type'
@@ -105,10 +105,9 @@ def update_output_container(selected_statistics, input_year):
         )
     )
 # Plot 4 bar chart for the effect of unemployment rate on vehicle type and sales
-        all_var = recession_data.groupby(['unemployment_rate', 'Vehicle_Type'])['Automobile_Sales'].count().reset_index
+        all_var = recession_data.groupby(['unemployment_rate', 'Vehicle_Type'])['Automobile_Sales'].count().reset_index()
         R_Chart4 = dcc.Graph( figure = 
-        px.histogram(all_var, 
-        x='unemployement_rate', color='Vehicle_Type', barmode='group')
+        px.bar(all_var, x='unemployment_rate', y='Automobile_Sales', color='Vehicle_Type')
         )
 
         return [R_chart1, R_chart2, R_chart3, R_Chart4
