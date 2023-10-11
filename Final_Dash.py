@@ -1,3 +1,7 @@
+import dash
+from dash import dcc
+from dash import html, ctx
+from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.express as px
@@ -11,7 +15,7 @@ app = dash.Dash(__name__)
 # Set the title of the dashboard
 app.title = "Automobile Statistics Dashboard"
 
-style_choice = {'textAlign:' 'center', 'color': '#503D36', 'font-szie': 24}
+style_choice = {'textAlign' : 'center', 'color': '#503D36', 'font-szie': 24}
 dropdown_style = {'width': '80%', 'padding': '3px', 'font-size': '20px', 'textAlign':'center'}
 
 #---------------------------------------------------------------------------------
@@ -30,45 +34,32 @@ app.layout = html.Div([
     html.Div([#TASK 2.2: Add two dropdown menus
         html.Label("Select Statistics:"),
         dcc.Dropdown(
-            dropdown_options,
+            id='dropdown_statistics',
+            options=dropdown_options,
             placeholder = 'Select a time frame'
             'Yearly Statistics',
-            id='dropdown_statistics',
-            inline=True
             style=dropdown_style
         )
     ]),
     html.Div(dcc.Dropdown(
-            id='select year',
-            placeholder = 'Select a Year'
+            id='select-year',
+            placeholder = 'Select a Year',
             options=[{'label': i, 'value': i} for i in year_list],
-            value='2023'
+            value='2023',
             style=dropdown_style
         )),
     html.Div([#TASK 2.3: Add a division for output display
-    html.Div(id=output_container, className=chart_grid, style='display': 'flex',])
-]),
-
-html.Div([
-    html.Div([], id='plot1'),
-    html.Div([], id='plot2')],
-    style={'display': 'flex'}),
-
-html.Div([
-    html.Div([], id='plot3'),
-    html.Div([], id='plot4')],
-    style={'display': 'flex'})    
-
-
+    html.Div(id='output-container', className='chart_grid', style={'display': 'flex'}),])
+])
 
 #TASK 2.4: Creating Callbacks
 # Define the callback function to update the input container based on the selected statistics
 @app.callback(
-    Output(component_id=select_year, component_property='disabled'),
-    Input(component_id=dropdown_statistics,component_property='disabled'))
+    Output(component_id=select-year, component_property='disabled'),
+    Input(component_id=dropdown-statistics,component_property='value'))
 
-def update_input_container(dropdown_statistics):
-    if dropdown_statistics == 'Yearly Statistics': 
+def update_input_container(selected_statistics):
+    if selected_statistics == 'Yearly Statistics': 
         return False
     else: 
         return True
@@ -76,27 +67,18 @@ def update_input_container(dropdown_statistics):
 #Callback for plotting
 #Define the callback function to update the input container based on the selected statistics
 @app.callback(
-    Output(component_id='plot1', component_property='children'),
-    Output(component_id='plot2', component_property='children')
-    Output(component_id='plot3', component_property='children'),
-    Output(component_id='plot4', component_property='children')
-    [Input(component_id='select year', component_property='value'),
-    Input(component_id='dropdown_statistics', component_property='value')])
+    Output(component_id='output-containter', component_property='children'),
+    [Input(component_id='dropdown-statistics', component_property='value'),
+     Input(component_id='select-year', component_property='value')])
 
 
-def update_output_container(dropdown_statistics):
-    if dropdown_statistics == 'Recession Period Statistics':
+def update_output_container(selected_statistics, input_year):
+    if selected_statistics == 'Recession Period Statistics':
         # Filter the data for recession periods
         recession_data = data[data['Recession'] == 1]
         
 #TASK 2.5: Create and display graphs for Recession Report Statistics
-@app.callback(
-    Output(component_id='plot1', component_property='children'),
-    Output(component_id='plot2', component_property='children')
-    Output(component_id='plot3', component_property='children'),
-    Output(component_id='plot4', component_property='children')
-    [Input(component_id='select year', component_property='value'),
-    Input(component_id='dropdown_statistics', component_property='value')])
+
 #Plot 1 Automobile sales fluctuate over Recession Period (year wise)
         # use groupby to create relevant data for plotting
         yearly_rec=recession_data.groupby('Year')['Automobile_Sales'].mean().reset_index()
