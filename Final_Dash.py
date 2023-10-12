@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[ ]:
+
+
 import dash
 from dash import dcc
 from dash import html, ctx
@@ -55,8 +61,8 @@ app.layout = html.Div([
 #TASK 2.4: Creating Callbacks
 # Define the callback function to update the input container based on the selected statistics
 @app.callback(
-    Output(component_id=select-year, component_property='disabled'),
-    Input(component_id=dropdown-statistics,component_property='value'))
+    Output(component_id='select-year', component_property='disabled'),
+    Input(component_id='dropdown-statistics',component_property='value'))
 
 def update_input_container(selected_statistics):
     if selected_statistics == 'Yearly Statistics': 
@@ -91,26 +97,23 @@ def update_output_container(selected_statistics, input_year):
 #Plot 2 Calculate the average number of vehicles sold by vehicle type       
         # use groupby to create relevant data for plotting
         average_sales = recession_data.groupby('Vehicle_Type')['Automobile_Sales'].mean().reset_index()                           
-        R_chart2  = dcc.Graph(figure=px.bar(average_sales, x='Vehicle_Type', y='Automobile_Sales')
+        R_chart2  = dcc.Graph(figure=px.bar(average_sales, x='Vehicle_Type', y='Automobile_Sales'))
         
 # Plot 3 Pie chart for total expenditure share by vehicle type during recessions
         # use groupby to create relevant data for plotting
         exp_rec = recession_data.groupby('Vehicle_Type')['Automobile_Sales'].sum().reset_index()
-        R_chart3 = dcc.Graph (
+        R_chart3 = dcc.Graph(
             figure= px.pie(exp_rec,
             values = 'Automobile_Sales',
             names='Vehicle_Type',
-            title='Total Sales by Vehicle Type'
-      
-        )
-    )
+            title='Total Sales by Vehicle Type'))
 # Plot 4 bar chart for the effect of unemployment rate on vehicle type and sales
         all_var = recession_data.groupby(['unemployment_rate', 'Vehicle_Type'])['Automobile_Sales'].count().reset_index()
         R_Chart4 = dcc.Graph( figure = 
         px.bar(all_var, x='unemployment_rate', y='Automobile_Sales', color='Vehicle_Type')
         )
 
-        return [R_chart1, R_chart2, R_chart3, R_Chart4
+        return [
             html.Div(className='chart-item', children=[html.Div(children=R_chart1),html.Div(children=R_chart2)],style={'display': 'flex'}),
             html.Div(className='chart-item', children=[html.Div(children=R_chart3),html.Div(R_Chart4)],style={'display': 'flex'})
             ]
@@ -134,18 +137,18 @@ def update_output_container(selected_statistics, input_year):
             # Plot bar chart for average number of vehicles sold during the given year
         avr_vdata=yearly_data.groupby('Vehicle_Type')['Automobile_Sales'].mean().reset_index()
         Y_chart3 = dcc.Graph( figure = px.bar(yearly_data, x='Vehicle_Type', y='Automobile_Sales'
-,title='Average Vehicles Sold by Vehicle Type in the year'))
+        ,title='Average Vehicles Sold by Vehicle Type in the year'))
 
             # Total Advertisement Expenditure for each vehicle using pie chart
         exp_data=yearly_data.groupby('Vehicle_Type')['Advertising_Expenditure'].sum().reset_index()
-        Y_chart4 = dcc.Graph(figure = px.pie(yearly_data, values= 'Automobile_Sales', 
+        Y_chart4 = dcc.Graph(figure = px.pie(exp_data, values= 'Automobile_Sales',
         names = 'Vehicle_Type',
         title = 'Advertising Cost by Vehicle' 
         ))
 
 #TASK 2.6: Returning the graphs for displaying Yearly data
         return [
-                html.Div(className='chart-item', children=[html.Div(children=Y_chart1,html.Div(children=Y_chart2)],style={'display': 'flex'}),
+                html.Div(className='chart-item', children=[html.Div(children=Y_chart1),html.Div(children=Y_chart2)],style={'display': 'flex'}),
                 html.Div(className='chart-item', children=[html.Div(children=Y_chart3),html.Div(children=Y_chart4)],style={'display': 'flex'})
                 ]
         
@@ -155,4 +158,3 @@ def update_output_container(selected_statistics, input_year):
 # Run the Dash app
 if __name__ == '__main__':
     app.run_server(debug=True)
-
