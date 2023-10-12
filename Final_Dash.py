@@ -40,7 +40,7 @@ app.layout = html.Div([
     html.Div([#TASK 2.2: Add two dropdown menus
         html.Label("Select Statistics:"),
         dcc.Dropdown(
-            id='dropdown_statistics',
+            id='dropdown-statistics',
             options=dropdown_options,
             placeholder = 'Select a time frame'
             'Yearly Statistics',
@@ -78,7 +78,7 @@ def update_input_container(selected_statistics):
      Input(component_id='select-year', component_property='value')])
 
 
-def update_output_container(selected_statistics, input_year):
+def update_output_container(selected_statistics,input_year):
     if selected_statistics == 'Recession Period Statistics':
         # Filter the data for recession periods
         recession_data = data[data['Recession'] == 1]
@@ -120,7 +120,7 @@ def update_output_container(selected_statistics, input_year):
 
 # TASK 2.6: Create and display graphs for Yearly Report Statistics
  # Yearly Statistic Report Plots                             
-    elif (input_year and selected_statistics=='Yearly Statistics') :
+    elif (input_year and selected_statistics =='Yearly Statistics') :
         yearly_data = data[data['Year'] == input_year]
                               
 #TASK 2.5: Creating Graphs Yearly data
