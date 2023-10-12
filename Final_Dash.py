@@ -148,8 +148,8 @@ def update_output_container(selected_statistics,input_year):
 
 #TASK 2.6: Returning the graphs for displaying Yearly data
         return [
-                html.Div(className='chart-item', children=[html.Div(children=Y_chart1),html.Div(children=Y_chart2)],style={'display': 'flex'}),
-                html.Div(className='chart-item', children=[html.Div(children=Y_chart3),html.Div(children=Y_chart4)],style={'display': 'flex'})
+                html.Div(className='chart-item', children=[html.Div(children=Y_chart1),html.Div(children=Y_chart2)],style={'display': 'flex', 'flex-wrap': 'wrap'}),
+                html.Div(className='chart-item', children=[html.Div(children=Y_chart3),html.Div(children=Y_chart4)],style={'display': 'flex', 'flex-wrap': 'wrap'})
                 ]
         
     else:
